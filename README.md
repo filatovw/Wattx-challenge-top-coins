@@ -36,7 +36,7 @@ Both `rank` and `price` services drain actual info from the external APIs regula
 
 TODO:
 
-- [ ] `rank` service functionality
+- [x] `rank` service functionality
 - [ ] `price` service functionality
 - [ ] skeleton for the API HTTP server
 - [ ] protofiles

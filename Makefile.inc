@@ -29,4 +29,8 @@ check:
 
 PHONY:test
 test:
-	go test ./...
+	go test -race -v ./...
+
+PHONY:integration
+integration:
+	go test -v -tags=integration ./...

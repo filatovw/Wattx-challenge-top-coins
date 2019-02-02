@@ -34,3 +34,26 @@ services:
     image: postges
     ports:
       - 5422:5432
+
+  consul-cluster:
+    image: consul
+    command: sh -c "consul agent -data-dir=/consul/data -client=0.0.0.0 -server -bootstrap-expect=1 -node-id=`cat /proc/sys/kernel/random/uuid`"
+
+  consul-agent:
+    image: consul
+    command: sh -c "consul agent -data-dir=/consul/data -client=0.0.0.0 -ui -join=consul-cluster -node-id=`cat /proc/sys/kernel/random/uuid`"
+    ports:
+      - 8500:8500
+    depends_on:
+      - consul-cluster
+    environment:
+      CONSUL_UI_BETA: "true"
+
+  registrator:
+    image: gliderlabs/registrator
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    command: -cleanup -internal consul://localhost:8500 
+    depends_on:
+      - consul-agent
+    network_mode: "host"
