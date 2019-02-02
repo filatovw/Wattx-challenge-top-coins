@@ -1,0 +1,36 @@
+version: '3.6'
+services:
+  api:
+    image: api:${API_TAG}
+    ports:
+      - 6667:8080
+
+  pricelist:
+    image: pricelist:${PRICELIST_TAG}
+    ports:
+      - 0:9200
+
+  pricelist-db:
+    image: postgres
+    ports:
+      - 5402:5432
+
+  price:
+    image: price:${PRICE_TAG}
+    ports:
+      - 0:9200
+    
+  price-db:
+    image: postgres
+    ports:
+      - 5412:5432
+
+  rank:
+    image: rank:${RANK_TAG}
+    ports:
+      - 0:9200
+    
+  rank-db:
+    image: postges
+    ports:
+      - 5422:5432
