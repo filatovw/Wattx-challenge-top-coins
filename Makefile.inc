@@ -1,15 +1,32 @@
-SHELL	:= /bin/bash -o pipefail
-
-BRANCH	?= $(shell git rev-parse --abbrev-ref HEAD)
+BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
 TAG	?= $(shell git describe --always --tags)
 
 SERVICE	?= $(notdir $(CURDIR))
 
-DSTIMG	:= services/$(SERVICE):$(BRANCH)
-TAGIMG	:= services/$(SERVICE):$(BRANCH)-$(TAG)
+BUCKET := filatovw/services-$(SERVICE)
+BRANCH_IMG := $(BUCKET):$(BRANCH)
+BRANCH_TAG_IMG:= $(BUCKET):$(BRANCH)-$(TAG)
 
-PHONY: build
+PHONY:build
 build:
-    $(info >>> $@)
-    docker build --rm -t $(DSTIMG) $(CURDIR)
-	; docker tag $(DSTIMG) $(TAGIMG)
+	docker build --rm -f Dockerfile -t $(BRANCH_IMG) -t $(BRANCH_TAG_IMG) $(CURDIR)/../
+
+PHONY:push
+push:
+	docker push $(BRANCH_IMG)
+
+PHONY:pull
+pull:
+	docker pull $(BRANCH_IMG)
+
+PHONY:clear
+clear:
+	-docker images | grep $(BUCKET) | awk '{print $$3}' | xargs docker rmi -f {}
+
+PHONY:check
+check:
+	golangci-lint run ./...
+
+PHONY:test
+test:
+	go test ./...
