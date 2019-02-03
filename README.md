@@ -38,20 +38,21 @@ TODO:
 
 - [x] `rank` service functionality
 - [ ] `price` service functionality
-- [ ] skeleton for the API HTTP server
-- [ ] protofiles
+- [x] skeleton for the API HTTP server
+- [x] support CSV/JSON formats
+- [x] protofiles
 - [ ] protofiles compilator
 - [ ] gRPC servers & clients
 - [ ] `pricelist` aggregation
 - [ ] `pricelist` storage
-- [ ] API service `/healthcheck` 
+- [x] API service `/healthcheck` 
 - [ ] API service `/` with support of `limit` parameter
 - [ ] `price` storage
 - [ ] `rank` storage
 - [ ] `pricelist` storage
 - [ ] explanation for development process
-- [ ] introduce service discovery
-- [ ] introduce config management
+- [x] introduce service discovery
+- [x] introduce config management
 
 What I'd add if I have time:
 ----------------------------

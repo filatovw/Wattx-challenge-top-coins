@@ -18,6 +18,6 @@ configure:
 
 PHONY:codegen
 codegen:
-	protoc -I=. --go_out=plugins=grpc:. ./pricelist/rpc/*.proto
-	protoc -I=. --go_out=plugins=grpc:. ./price/rpc/*.proto
-	protoc -I=. --go_out=plugins=grpc:. ./rank/rpc/*.proto
+	protoc -I=. --go_out=plugins=grpc:. ./pricelist/pricelist/*.proto
+	protoc -I=. --go_out=plugins=grpc:. ./price/price/*.proto
+	protoc -I=. --go_out=plugins=grpc:. ./rank/rank/*.proto
