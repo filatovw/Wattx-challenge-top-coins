@@ -2,5 +2,9 @@
     "grpc": {
         "host": "0.0.0.0",
         "port": 9200
+    },
+    "coinmarketcap": {
+        "key": "6c07c9dc-0cc3-4810-8a3d-3c212f7493dd",
+        "url": "https://pro-api.coinmarketcap.com/v1/cryptocurrency"
     }
 }
