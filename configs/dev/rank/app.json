@@ -4,10 +4,6 @@
         "url": "https://min-api.cryptocompare.com:80/data/",
         "base_currency": "BTC"
     },
-    "http": {
-        "host": "localhost",
-        "port": 8080
-    },
     "grpc": {
         "host": "localhost",
         "port": 9200
