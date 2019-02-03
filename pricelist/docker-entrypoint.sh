@@ -1,7 +1,4 @@
 #!/bin/bash
-set -e
-set -o pipefail
-
-echo "ENTRYPOINT"
+set -eoux pipefail
 
 exec /usr/bin/app "$@"
