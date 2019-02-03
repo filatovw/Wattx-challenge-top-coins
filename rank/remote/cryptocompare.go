@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"path"
 	"strconv"
 	"time"
 
@@ -27,12 +28,12 @@ type Currency struct {
 }
 
 type TopListByPairVolumeResponse struct {
-	Data           []Currency `json:"Data"`
+	Data           []Currency `json:"Data,omitempty"`
 	Type           int        `json:"Type"`
 	Response       string     `json:"Response"`
 	Message        string     `json:"Message"`
 	HasWarning     bool       `json:"HasWarning"`
-	ParamWithError string     `json:"ParamWithError"`
+	ParamWithError string     `json:"ParamWithError,omitempty"`
 }
 
 type CryptoCompareClient struct {
@@ -62,7 +63,7 @@ func (c CryptoCompareClient) TopListByPairVolume(ctx context.Context, limit int)
 
 	v := url.Values{}
 	v.Add("tsym", c.baseCurrency)
-	v.Add("limit", strconv.Itoa(limit-1))
+	v.Add("limit", strconv.Itoa(limit))
 
 	u, err := url.Parse(c.url)
 	if err != nil {
@@ -70,6 +71,7 @@ func (c CryptoCompareClient) TopListByPairVolume(ctx context.Context, limit int)
 	}
 	u.RawQuery = v.Encode()
 
+	u.Path = path.Join(u.Path, "/top/volumes/")
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, errors.WithMessage(err, "TopListByPairVolume, NewRequest")
@@ -81,9 +83,11 @@ func (c CryptoCompareClient) TopListByPairVolume(ctx context.Context, limit int)
 	if err != nil {
 		return nil, errors.WithMessage(err, "TopListByPairVolume, client.Do")
 	}
+	if resp.StatusCode != 200 {
+		return nil, errors.Errorf("TopListByPairVolume, request failed with status: %s", resp.Status)
+	}
 	var target TopListByPairVolumeResponse
 	defer resp.Body.Close()
-
 	if err := json.NewDecoder(resp.Body).Decode(&target); err != nil {
 		return nil, errors.WithMessage(err, "TopListByPairVolume, decode response")
 	}

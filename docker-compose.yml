@@ -10,31 +10,16 @@ services:
     ports:
       - 0:9200
 
-  pricelist-db:
-    image: postgres
-    ports:
-      - 5402:5432
-
   price:
     image: filatovw/services-price:latest
     ports:
       - 0:9200
     
-  price-db:
-    image: postgres
-    ports:
-      - 5412:5432
-
   rank:
     image: filatovw/services-rank:latest
     ports:
       - 0:9200
     
-  rank-db:
-    image: postges
-    ports:
-      - 5422:5432
-
   consul-agent:
     image: consul
     command: sh -c "consul agent -data-dir=/consul/data -client=0.0.0.0 -ui -join=consul-cluster -node-id=`cat /proc/sys/kernel/random/uuid`"
@@ -68,4 +53,4 @@ services:
     command: ./update.sh 
     working_dir: /configs/
     volumes:
-      - ./configs/:/configs/
+      - ./infrastructure/configs/:/configs/

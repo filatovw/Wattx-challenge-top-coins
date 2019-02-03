@@ -156,7 +156,7 @@ func init() {
 func init() { proto.RegisterFile("rank/rank/rank.proto", fileDescriptor_58febef648081654) }
 
 var fileDescriptor_58febef648081654 = []byte{
-	// 203 bytes of a gzipped FileDescriptorProto
+	// 196 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x29, 0x4a, 0xcc, 0xcb,
 	0xd6, 0x87, 0x13, 0x7a, 0x05, 0x45, 0xf9, 0x25, 0xf9, 0x42, 0x2c, 0x20, 0xb6, 0x92, 0x3a, 0x17,
 	0xbf, 0x7b, 0x6a, 0x49, 0x50, 0x62, 0x5e, 0x76, 0x71, 0x50, 0x6a, 0x61, 0x69, 0x6a, 0x71, 0x89,
@@ -166,10 +166,10 @@ var fileDescriptor_58febef648081654 = []byte{
 	0xc1, 0x6d, 0xc4, 0xa7, 0x07, 0xb6, 0x03, 0x2a, 0x5e, 0x19, 0x84, 0xa4, 0x42, 0xc9, 0x8c, 0x8b,
 	0x03, 0x26, 0x2e, 0x24, 0xc4, 0xc5, 0x02, 0x32, 0x0c, 0x6a, 0x09, 0x98, 0x2d, 0x24, 0xc6, 0xc5,
 	0x16, 0x5c, 0x99, 0x9b, 0x94, 0x9f, 0x23, 0xc1, 0xa4, 0xc0, 0xa8, 0xc1, 0x19, 0x04, 0xe5, 0x19,
-	0xf9, 0x73, 0x09, 0x04, 0x14, 0x65, 0x26, 0xa7, 0xe6, 0x64, 0x16, 0x97, 0x04, 0xa7, 0x16, 0x95,
-	0x65, 0x26, 0xa7, 0x0a, 0x59, 0x73, 0x71, 0xc0, 0xdc, 0x23, 0x24, 0x0a, 0xb1, 0x13, 0xcd, 0x23,
-	0x52, 0x62, 0xe8, 0xc2, 0x10, 0x67, 0x2b, 0x31, 0x24, 0xb1, 0x81, 0x83, 0xc0, 0x18, 0x10, 0x00,
-	0x00, 0xff, 0xff, 0xac, 0xce, 0xef, 0x06, 0x1a, 0x01, 0x00, 0x00,
+	0x79, 0x71, 0x71, 0x83, 0xe4, 0x83, 0x53, 0x8b, 0xca, 0x32, 0x93, 0x53, 0x85, 0xac, 0xb9, 0x38,
+	0x60, 0x4e, 0x11, 0x12, 0x85, 0x58, 0x87, 0xe6, 0x07, 0x29, 0x31, 0x74, 0x61, 0x88, 0x8b, 0x95,
+	0x18, 0x92, 0xd8, 0xc0, 0xbe, 0x37, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x91, 0xb6, 0x8d, 0xa9,
+	0x15, 0x01, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -180,64 +180,64 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// PricelistServiceClient is the client API for PricelistService service.
+// RankServiceClient is the client API for RankService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type PricelistServiceClient interface {
+type RankServiceClient interface {
 	GetRanks(ctx context.Context, in *GetRanksRequest, opts ...grpc.CallOption) (*GetRanksResponse, error)
 }
 
-type pricelistServiceClient struct {
+type rankServiceClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewPricelistServiceClient(cc *grpc.ClientConn) PricelistServiceClient {
-	return &pricelistServiceClient{cc}
+func NewRankServiceClient(cc *grpc.ClientConn) RankServiceClient {
+	return &rankServiceClient{cc}
 }
 
-func (c *pricelistServiceClient) GetRanks(ctx context.Context, in *GetRanksRequest, opts ...grpc.CallOption) (*GetRanksResponse, error) {
+func (c *rankServiceClient) GetRanks(ctx context.Context, in *GetRanksRequest, opts ...grpc.CallOption) (*GetRanksResponse, error) {
 	out := new(GetRanksResponse)
-	err := c.cc.Invoke(ctx, "/rank.PricelistService/GetRanks", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/rank.RankService/GetRanks", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// PricelistServiceServer is the server API for PricelistService service.
-type PricelistServiceServer interface {
+// RankServiceServer is the server API for RankService service.
+type RankServiceServer interface {
 	GetRanks(context.Context, *GetRanksRequest) (*GetRanksResponse, error)
 }
 
-func RegisterPricelistServiceServer(s *grpc.Server, srv PricelistServiceServer) {
-	s.RegisterService(&_PricelistService_serviceDesc, srv)
+func RegisterRankServiceServer(s *grpc.Server, srv RankServiceServer) {
+	s.RegisterService(&_RankService_serviceDesc, srv)
 }
 
-func _PricelistService_GetRanks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RankService_GetRanks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetRanksRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PricelistServiceServer).GetRanks(ctx, in)
+		return srv.(RankServiceServer).GetRanks(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rank.PricelistService/GetRanks",
+		FullMethod: "/rank.RankService/GetRanks",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PricelistServiceServer).GetRanks(ctx, req.(*GetRanksRequest))
+		return srv.(RankServiceServer).GetRanks(ctx, req.(*GetRanksRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _PricelistService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "rank.PricelistService",
-	HandlerType: (*PricelistServiceServer)(nil),
+var _RankService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "rank.RankService",
+	HandlerType: (*RankServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetRanks",
-			Handler:    _PricelistService_GetRanks_Handler,
+			Handler:    _RankService_GetRanks_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

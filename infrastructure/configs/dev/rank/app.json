@@ -1,11 +1,11 @@
 {
     "crypto_compare": {
         "key": "543e1ae0fd900fae7a8d8bf136be536dd1caaeb20b1b2dc9c6b2ee5f3843646f",
-        "url": "https://min-api.cryptocompare.com:80/data/",
+        "url": "https://min-api.cryptocompare.com/data/",
         "base_currency": "BTC"
     },
     "grpc": {
-        "host": "localhost",
+        "host": "0.0.0.0",
         "port": 9200
     }
 }

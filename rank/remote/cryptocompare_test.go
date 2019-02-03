@@ -16,7 +16,7 @@ func TestTopListByPairVolume(t *testing.T) {
 		BaseCurrency: "BTC",
 	}
 	client := NewCryptoCompareClient(cfg)
-	limit := 15
+	limit := 100
 	curs, err := client.TopListByPairVolume(context.TODO(), limit)
 	if err != nil {
 		t.Errorf("Unexpected error: %s", err)
@@ -24,4 +24,5 @@ func TestTopListByPairVolume(t *testing.T) {
 	if len(curs) != limit {
 		t.Errorf("Expected %d, got %d", limit, len(curs))
 	}
+	t.Log(curs)
 }

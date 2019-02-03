@@ -1,4 +1,4 @@
-package pricelist
+package price
 
 import (
 	fmt "fmt"
@@ -10,12 +10,12 @@ import (
 )
 
 type Client interface {
-	PricelistServiceClient
+	PriceServiceClient
 	io.Closer
 }
 
 type client struct {
-	PricelistServiceClient
+	PriceServiceClient
 	*grpc.ClientConn
 }
 
@@ -26,7 +26,7 @@ func Connect(gcfg cfg.GRPCServiceConfig) (Client, error) {
 		return nil, errors.Wrapf(err, "Connect")
 	}
 	return client{
-		NewPricelistServiceClient(conn),
+		NewPriceServiceClient(conn),
 		conn,
 	}, nil
 }

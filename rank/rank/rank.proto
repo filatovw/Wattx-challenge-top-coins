@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package rank;
 
-service PricelistService {
+service RankService {
     rpc GetRanks(GetRanksRequest) returns (GetRanksResponse) {}
 }
 

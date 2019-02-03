@@ -1,4 +1,4 @@
-package pricelist
+package rank
 
 import (
 	fmt "fmt"
@@ -10,28 +10,27 @@ import (
 )
 
 type Client interface {
-	PricelistServiceClient
+	RankServiceClient
 	io.Closer
 }
 
 type client struct {
-	PricelistServiceClient
+	RankServiceClient
 	*grpc.ClientConn
 }
 
 func Connect(gcfg cfg.GRPCServiceConfig) (Client, error) {
-	// gcfg.FullServiceName() TODO: wtf is going on with registrator???
 	conn, err := grpc.Dial(fmt.Sprintf("%s:9200", gcfg.ServiceName()), grpc.WithInsecure())
 	if err != nil {
 		return nil, errors.Wrapf(err, "Connect")
 	}
 	return client{
-		NewPricelistServiceClient(conn),
+		NewRankServiceClient(conn),
 		conn,
 	}, nil
 }
 
-const maxMsgSize = 100 * 1024 * 1024 // 100MB
+const maxMsgSize = 100 * 1024 * 1024 // 10MB
 
 var (
 	MaxSendMsgSize     = grpc.MaxSendMsgSize(maxMsgSize)     // server side

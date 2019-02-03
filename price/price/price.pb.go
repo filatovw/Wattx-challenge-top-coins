@@ -156,7 +156,7 @@ func init() {
 func init() { proto.RegisterFile("price/price/price.proto", fileDescriptor_d539350e99067cbd) }
 
 var fileDescriptor_d539350e99067cbd = []byte{
-	// 192 bytes of a gzipped FileDescriptorProto
+	// 188 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2f, 0x28, 0xca, 0x4c,
 	0x4e, 0xd5, 0x47, 0x22, 0xf5, 0x0a, 0x8a, 0xf2, 0x4b, 0xf2, 0x85, 0x58, 0xc1, 0x1c, 0x25, 0x0d,
 	0x2e, 0x01, 0xf7, 0xd4, 0x92, 0x00, 0x10, 0xbb, 0x38, 0x28, 0xb5, 0xb0, 0x34, 0xb5, 0xb8, 0x44,
@@ -165,10 +165,10 @@ var fileDescriptor_d539350e99067cbd = []byte{
 	0xc5, 0x06, 0x11, 0x91, 0x60, 0x54, 0x60, 0xd6, 0xe0, 0x36, 0xe2, 0xd1, 0x83, 0xd8, 0x01, 0x16,
 	0x0c, 0x82, 0xca, 0x29, 0x99, 0x72, 0xb1, 0x82, 0x59, 0x42, 0x62, 0x5c, 0x6c, 0xc1, 0x95, 0xb9,
 	0x49, 0xf9, 0x39, 0x60, 0xa3, 0x39, 0x83, 0xa0, 0x3c, 0x90, 0x8d, 0x61, 0x89, 0x39, 0xa5, 0xa9,
-	0x12, 0x4c, 0x0a, 0x8c, 0x1a, 0x8c, 0x41, 0x10, 0x8e, 0x51, 0x08, 0x97, 0x00, 0x58, 0x5b, 0x4e,
-	0x66, 0x71, 0x49, 0x70, 0x6a, 0x51, 0x19, 0xc8, 0x04, 0x07, 0x2e, 0x4e, 0xb8, 0x2b, 0x84, 0xc4,
-	0xa1, 0xb6, 0xa1, 0xfb, 0x40, 0x4a, 0x02, 0x53, 0x02, 0xe2, 0x60, 0x25, 0x86, 0x24, 0x36, 0xb0,
-	0xff, 0x8d, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0xd7, 0xa6, 0x56, 0xc9, 0x1a, 0x01, 0x00, 0x00,
+	0x12, 0x4c, 0x0a, 0x8c, 0x1a, 0x8c, 0x41, 0x10, 0x8e, 0x51, 0x00, 0x17, 0x0f, 0x58, 0x5b, 0x70,
+	0x6a, 0x51, 0x19, 0x48, 0xb7, 0x03, 0x17, 0x27, 0xdc, 0x05, 0x42, 0xe2, 0x50, 0x9b, 0xd0, 0x5d,
+	0x2f, 0x25, 0x81, 0x29, 0x01, 0x71, 0xac, 0x12, 0x43, 0x12, 0x1b, 0xd8, 0xef, 0xc6, 0x80, 0x00,
+	0x00, 0x00, 0xff, 0xff, 0x16, 0x8a, 0x7c, 0x75, 0x16, 0x01, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -179,64 +179,64 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// PricelistServiceClient is the client API for PricelistService service.
+// PriceServiceClient is the client API for PriceService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type PricelistServiceClient interface {
+type PriceServiceClient interface {
 	GetPrices(ctx context.Context, in *GetPricesRequest, opts ...grpc.CallOption) (*GetPricesResponse, error)
 }
 
-type pricelistServiceClient struct {
+type priceServiceClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewPricelistServiceClient(cc *grpc.ClientConn) PricelistServiceClient {
-	return &pricelistServiceClient{cc}
+func NewPriceServiceClient(cc *grpc.ClientConn) PriceServiceClient {
+	return &priceServiceClient{cc}
 }
 
-func (c *pricelistServiceClient) GetPrices(ctx context.Context, in *GetPricesRequest, opts ...grpc.CallOption) (*GetPricesResponse, error) {
+func (c *priceServiceClient) GetPrices(ctx context.Context, in *GetPricesRequest, opts ...grpc.CallOption) (*GetPricesResponse, error) {
 	out := new(GetPricesResponse)
-	err := c.cc.Invoke(ctx, "/price.PricelistService/GetPrices", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/price.PriceService/GetPrices", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// PricelistServiceServer is the server API for PricelistService service.
-type PricelistServiceServer interface {
+// PriceServiceServer is the server API for PriceService service.
+type PriceServiceServer interface {
 	GetPrices(context.Context, *GetPricesRequest) (*GetPricesResponse, error)
 }
 
-func RegisterPricelistServiceServer(s *grpc.Server, srv PricelistServiceServer) {
-	s.RegisterService(&_PricelistService_serviceDesc, srv)
+func RegisterPriceServiceServer(s *grpc.Server, srv PriceServiceServer) {
+	s.RegisterService(&_PriceService_serviceDesc, srv)
 }
 
-func _PricelistService_GetPrices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _PriceService_GetPrices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetPricesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PricelistServiceServer).GetPrices(ctx, in)
+		return srv.(PriceServiceServer).GetPrices(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/price.PricelistService/GetPrices",
+		FullMethod: "/price.PriceService/GetPrices",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PricelistServiceServer).GetPrices(ctx, req.(*GetPricesRequest))
+		return srv.(PriceServiceServer).GetPrices(ctx, req.(*GetPricesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _PricelistService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "price.PricelistService",
-	HandlerType: (*PricelistServiceServer)(nil),
+var _PriceService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "price.PriceService",
+	HandlerType: (*PriceServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetPrices",
-			Handler:    _PricelistService_GetPrices_Handler,
+			Handler:    _PriceService_GetPrices_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
