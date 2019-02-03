@@ -1,9 +1,8 @@
 FROM golang:1.11 as builder
-COPY vendor $GOPATH/src/github.com/filatovw/app/vendor
-COPY api $GOPATH/src/github.com/filatovw/app/app
-WORKDIR $GOPATH/src/github.com/filatovw/app/
+COPY . $GOPATH/src/github.com/filatovw/Wattx-challenge-top-coins/
+WORKDIR $GOPATH/src/github.com/filatovw/Wattx-challenge-top-coins/
 RUN go install -v ./...
-RUN go build -o /usr/bin/app ./app
+RUN go build -o /usr/bin/app ./api
 
 
 FROM debian:stretch
