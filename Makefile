@@ -15,3 +15,9 @@ prune:
 PHONY:configure
 configure:
 	docker-compose run --rm -e APP_ENVIRONMENT=dev configure
+
+PHONY:codegen
+codegen:
+	protoc -I=. --go_out=plugins=grpc:. ./pricelist/rpc/*.proto
+	protoc -I=. --go_out=plugins=grpc:. ./price/rpc/*.proto
+	protoc -I=. --go_out=plugins=grpc:. ./rank/rpc/*.proto

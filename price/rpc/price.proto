@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package price;
+
+service PricelistService {
+    rpc GetPrices(GetPricesRequest) returns (GetPricesResponse) {}
+}
+
+message GetPricesRequest {
+    int32 limit = 1;
+}
+
+message GetPricesResponse {
+    repeated Price Prices= 1;
+}
+
+message Price {
+    string Symbol = 1;
+    double Value = 2;
+}
