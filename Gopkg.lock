@@ -9,7 +9,8 @@
   revision = "3df31a1ada83e310c2e24b267c8e8b68836547b4"
 
 [[projects]]
-  digest = "1:4c0989ca0bcd10799064318923b9bc2db6b4d6338dd75f3f2d86c3511aaaf5cf"
+  branch = "master"
+  digest = "1:3638dd58eb7a77bb1ed3f57e81f46ce636f0325f68e0900bb9170f71df93b9bc"
   name = "github.com/golang/protobuf"
   packages = [
     "proto",
@@ -19,8 +20,7 @@
     "ptypes/timestamp",
   ]
   pruneopts = "UT"
-  revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
-  version = "v1.2.0"
+  revision = "347cf4a86c1cb8d262994d8ef5924d4576c5b331"
 
 [[projects]]
   digest = "1:1b9c99915ccf7df1e6085259ebf137a7b11fab87f47c382b3ec7a7ab51fbe2d8"
