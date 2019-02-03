@@ -1,12 +1,12 @@
 version: '3.6'
 services:
   api:
-    image: api:${API_TAG}
+    image: filatovw/services-api:${API_TAG}
     ports:
       - 6667:8080
 
   pricelist:
-    image: pricelist:${PRICELIST_TAG}
+    image: filatovw/services-pricelist:${PRICELIST_TAG}
     ports:
       - 0:9200
 
@@ -16,7 +16,7 @@ services:
       - 5402:5432
 
   price:
-    image: price:${PRICE_TAG}
+    image: filatovw/services-price:${PRICE_TAG}
     ports:
       - 0:9200
     
@@ -26,7 +26,7 @@ services:
       - 5412:5432
 
   rank:
-    image: rank:${RANK_TAG}
+    image: filatovw/services-rank:${RANK_TAG}
     ports:
       - 0:9200
     
@@ -34,10 +34,6 @@ services:
     image: postges
     ports:
       - 5422:5432
-
-  consul-cluster:
-    image: consul
-    command: sh -c "consul agent -data-dir=/consul/data -client=0.0.0.0 -server -bootstrap-expect=1 -node-id=`cat /proc/sys/kernel/random/uuid`"
 
   consul-agent:
     image: consul
@@ -47,13 +43,29 @@ services:
     depends_on:
       - consul-cluster
     environment:
-      CONSUL_UI_BETA: "true"
+      SERVICE_IGNORE: "true"
+
+  consul-cluster:
+    image: consul
+    command: sh -c "consul agent -data-dir=/consul/data -client=0.0.0.0 -server -bootstrap-expect=1 -node-id=`cat /proc/sys/kernel/random/uuid`"
+    environment:
+      SERVICE_IGNORE: "true"
 
   registrator:
     image: gliderlabs/registrator
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock
-    command: -cleanup -internal consul://localhost:8500 
+    command: -internal consul://localhost:8500
     depends_on:
       - consul-agent
     network_mode: "host"
+    environment:
+      SERVICE_IGNORE: "true"
+
+  configure:
+    image: byrnedo/alpine-curl
+    entrypoint: sh
+    command: ./update.sh 
+    working_dir: /configs/
+    volumes:
+      - ./configs/:/configs/

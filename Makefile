@@ -11,3 +11,7 @@ $(SUBDIRS):
 PHONY:prune
 prune:
 	docker system prune -f --volumes
+
+PHONY:configure
+configure:
+	docker-compose run --rm -e APP_ENVIRONMENT=dev configure
