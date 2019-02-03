@@ -9,3 +9,7 @@ type Config struct {
 func (c Config) ServiceName() string {
 	return "pricelist"
 }
+
+func (c Config) FullServiceName() string {
+	return c.GRPC.FullServiceName(c.ServiceName())
+}

@@ -30,7 +30,6 @@ func main() {
 	server := rpc.PricelistGRPCServer{}
 	pricelist.RegisterPricelistServiceServer(s, server)
 
-	// Регистрация службы ответов на сервере gRPC.
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

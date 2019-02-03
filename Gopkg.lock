@@ -10,10 +10,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:3638dd58eb7a77bb1ed3f57e81f46ce636f0325f68e0900bb9170f71df93b9bc"
+  digest = "1:a54f931f516df9f3b2401e3cfa47482be79397d20fcbe838b7da6c63d5b8e615"
   name = "github.com/golang/protobuf"
   packages = [
     "proto",
+    "protoc-gen-go/descriptor",
     "ptypes",
     "ptypes/any",
     "ptypes/duration",
@@ -76,9 +77,10 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:cd17bc5dbd6ff6bd147dcd4712d423c1808f529c77c879c34df6b20b7501562b"
+  digest = "1:fc7b6b4384e1e849d99eab58eca4f8c0a76bad4699117d5077a9a5c3c83e289e"
   name = "golang.org/x/net"
   packages = [
+    "context",
     "http/httpguts",
     "http2",
     "http2/hpack",
@@ -129,7 +131,7 @@
   revision = "4b09977fb92221987e99d190c8f88f2c92727a29"
 
 [[projects]]
-  digest = "1:9ab5a33d8cb5c120602a34d2e985ce17956a4e8c2edce7e6961568f95e40c09a"
+  digest = "1:468bc9b39a60a4ac6726976d60d32cb0fbcaf749fea4139be8cec53fdfbd82d5"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -157,6 +159,8 @@
     "metadata",
     "naming",
     "peer",
+    "reflection",
+    "reflection/grpc_reflection_v1alpha",
     "resolver",
     "resolver/dns",
     "resolver/passthrough",
@@ -176,6 +180,7 @@
     "github.com/hashicorp/consul/api",
     "github.com/pkg/errors",
     "google.golang.org/grpc",
+    "google.golang.org/grpc/reflection",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

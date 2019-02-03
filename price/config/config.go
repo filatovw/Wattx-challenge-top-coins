@@ -16,3 +16,7 @@ type CoinMarketCap struct {
 func (c Config) ServiceName() string {
 	return "price"
 }
+
+func (c Config) FullServiceName() string {
+	return c.GRPC.FullServiceName(c.ServiceName())
+}

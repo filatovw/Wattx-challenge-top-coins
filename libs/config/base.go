@@ -38,3 +38,7 @@ type HTTP struct {
 type GRPC struct {
 	listener
 }
+
+func (g GRPC) FullServiceName(service string) string {
+	return fmt.Sprintf("consul://%v/services-%v-%v", DefaultConsul, service, g.Port)
+}

@@ -12,14 +12,20 @@ type ServiceConfig interface {
 	ServiceName() string
 }
 
+type GRPCServiceConfig interface {
+	ServiceConfig
+	FullServiceName() string
+}
+
+const DefaultConsul = "consul-agent:8500"
+
 func LoadConfig(dest ServiceConfig) error {
-	consulHost := "consul-agent:8500"
 	// Get a new client
 	defaultCfg := consul.DefaultConfig()
-	defaultCfg.Address = consulHost
+	defaultCfg.Address = DefaultConsul
 	client, err := consul.NewClient(defaultCfg)
 	if err != nil {
-		return errors.Wrapf(err, "LoadConfig, host: %s", consulHost)
+		return errors.Wrapf(err, "LoadConfig, host: %s", DefaultConsul)
 	}
 
 	kv := client.KV()
