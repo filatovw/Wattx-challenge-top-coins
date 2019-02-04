@@ -2,12 +2,19 @@ package api
 
 import "net/http"
 
-func WriteError(w http.ResponseWriter, header http.Header, err error) {
+func WriteError(w http.ResponseWriter, headers map[string]string, err error) {
 	sterr := ToStatusError(err)
+	w.WriteHeader(sterr.Status())
+	for k, v := range headers {
+		w.Header().Add(k, v)
+	}
 	w.Write([]byte(sterr.message))
 }
 
-func WriteOK(w http.ResponseWriter, header http.Header, body []byte) {
+func WriteOK(w http.ResponseWriter, headers map[string]string, body []byte) {
 	w.WriteHeader(http.StatusOK)
+	for k, v := range headers {
+		w.Header().Add(k, v)
+	}
 	w.Write(body)
 }

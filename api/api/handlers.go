@@ -1,52 +1,46 @@
 package api
 
 import (
-	"encoding/json"
+	"bytes"
 	"net/http"
 	"strconv"
 
 	"github.com/pkg/errors"
 )
 
-const (
-	contentTypeJSON = "application/json"
-	contentTypeCSV  = "text/csv"
-)
-
 func PricelistHandler(srv Service) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
+		t := getCType(r)
+		headers := getHeaders(t)
+
 		limit, err := ToInt32(r.URL.Query().Get("limit"))
 		if err != nil {
-			WriteError(w, r.Header, ErrBadRequest.With(err))
+			WriteError(w, headers, ErrBadRequest.With(err))
 			return
 		}
 
 		res, err := srv.GetPricelist(ctx, &GetPricelistRequest{Limit: limit})
 		if err != nil {
-			WriteError(w, r.Header, err)
+			WriteError(w, headers, err)
 			return
 		}
-		buf, err := json.Marshal(res.Pricelist)
-		if err != nil {
-			WriteError(w, r.Header, ErrInternalServerError.With(err))
+		printerFn := getPricelistPrinter(t)
+		b := []byte{}
+		buffer := bytes.NewBuffer(b)
+		if err := printerFn(buffer, *res); err != nil {
+			WriteError(w, headers, ErrInternalServerError.With(err))
 			return
 		}
-		WriteOK(w, r.Header, buf)
+		WriteOK(w, headers, buffer.Bytes())
 	})
 }
 
-func WriteJSON(w http.ResponseWriter, body []byte) {
-	h := make(http.Header)
-	h.Add("content-type", "application/json")
-	WriteOK(w, h, body)
-}
-
 func HealthCheckHandlerFunc(w http.ResponseWriter, r *http.Request) {
-	h := make(http.Header)
-	h.Add("content-type", "application/json")
-	WriteOK(w, h, []byte("OK"))
+	t := getCType(r)
+	headers := getHeaders(t)
+	WriteOK(w, headers, []byte("OK"))
 }
 
 // ToInt32 helper convert incoming string to int32

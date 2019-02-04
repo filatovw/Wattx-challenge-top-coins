@@ -17,6 +17,7 @@ func (c Config) ServiceName() string {
 	return "rank"
 }
 
+// FullServiceName should give a name that can be used for Registrator
 func (c Config) FullServiceName() string {
 	return c.GRPC.FullServiceName(c.ServiceName())
 }

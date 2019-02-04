@@ -6,5 +6,5 @@ import (
 )
 
 func GetStdLogger(prefix string) *log.Logger {
-	return log.New(os.Stdout, prefix, log.Llongfile|log.LstdFlags|log.Lmicroseconds)
+	return log.New(os.Stdout, prefix+" ### ", log.Llongfile|log.LstdFlags|log.Lmicroseconds)
 }

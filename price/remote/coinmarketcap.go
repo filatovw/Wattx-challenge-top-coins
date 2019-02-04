@@ -20,6 +20,7 @@ var (
 	wrongCurrenciesPattern = regexp.MustCompile(`symbol.*"([\d\w\,]+)"$`)
 )
 
+// CoinMarketCap
 type CoinMarketCap interface {
 	GetMarketQuotes(ctx context.Context, names []string) (map[string]float64, error)
 }
@@ -32,6 +33,7 @@ type CoinMarketCapClient struct {
 	baseCurrency string
 }
 
+// NewCoinMarketCapClient client for coinmarketcap.com
 func NewCoinMarketCapClient(log *log.Logger, cfg config.CoinMarketCap) CoinMarketCapClient {
 	tr := &http.Transport{
 		MaxIdleConns:    10,
@@ -86,11 +88,13 @@ func (c CoinMarketCapClient) getMarketQuotes(ctx context.Context, names []string
 	return &target, nil
 }
 
+// GetMarketQuotes get quotes for given currencies (https://coinmarketcap.com/api/documentation/v1/#operation/getV1CryptocurrencyQuotesLatest)
 func (c CoinMarketCapClient) GetMarketQuotes(ctx context.Context, names []string) (map[string]float64, error) {
 	if len(names) == 0 {
 		return nil, nil
 	}
 
+	// Symbols should contain literals or digits.
 	for i, name := range names[:] {
 		names[i] = namePattern.ReplaceAllString(name, "")
 	}
@@ -99,7 +103,9 @@ func (c CoinMarketCapClient) GetMarketQuotes(ctx context.Context, names []string
 	if err != nil {
 		return nil, err
 	}
+	// fails on unknown Symbols
 	if res.Status.ErrorCode == 400 {
+		// hack: extract names of unknown symbols from error string and exclude them from `names`
 		wrongCurrencies := wrongCurrenciesPattern.FindStringSubmatch(res.Status.ErrorMessage)
 		if len(wrongCurrencies) == 2 {
 			wrongs := strings.Split(wrongCurrencies[1], ",")
@@ -116,6 +122,7 @@ func (c CoinMarketCapClient) GetMarketQuotes(ctx context.Context, names []string
 					cleaned = append(cleaned, name)
 				}
 			}
+			// request again
 			res, err = c.getMarketQuotes(ctx, cleaned)
 			if err != nil {
 				return nil, err

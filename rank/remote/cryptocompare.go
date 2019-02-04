@@ -15,6 +15,7 @@ import (
 	"github.com/filatovw/Wattx-challenge-top-coins/rank/config"
 )
 
+// CryptoComparer
 type CryptoComparer interface {
 	TopListByPairVolume(ctx context.Context, tsym string, limit int) ([]Currency, error)
 }
@@ -43,6 +44,7 @@ type CryptoCompareClient struct {
 	baseCurrency string
 }
 
+// NewCryptoCompareClient create client for interaction with min-api.cryptocompare.com/
 func NewCryptoCompareClient(cfg config.CryptoCompare) CryptoCompareClient {
 	tr := &http.Transport{
 		MaxIdleConns:    10,
@@ -56,15 +58,19 @@ func NewCryptoCompareClient(cfg config.CryptoCompare) CryptoCompareClient {
 	}
 }
 
+// TopListByPairVolume get ordered list of currencies (https://min-api.cryptocompare.com/documentation?key=Toplists&cat=topExchangesVolumes)
 func (c CryptoCompareClient) TopListByPairVolume(ctx context.Context, limit int) ([]Currency, error) {
-	if limit > 1000 || limit <= 0 {
+	limit-- // API returns (limit+1) values
+	if limit > 1000 || limit < 1 {
 		return nil, errors.Errorf("TopListByPairVolume, limit expected to be in [1, 1000] got: %d", limit)
 	}
 
+	// add currency and limitations to query
 	v := url.Values{}
 	v.Add("tsym", c.baseCurrency)
 	v.Add("limit", strconv.Itoa(limit))
 
+	// use URL from config
 	u, err := url.Parse(c.url)
 	if err != nil {
 		return nil, errors.WithMessagef(err, "TopListByPairVolume, url.Parse: %s", c.url)
@@ -76,6 +82,7 @@ func (c CryptoCompareClient) TopListByPairVolume(ctx context.Context, limit int)
 	if err != nil {
 		return nil, errors.WithMessage(err, "TopListByPairVolume, NewRequest")
 	}
+	// Auth headers
 	req.Header.Add("authorization", fmt.Sprintf("Apikey %s", c.key))
 	req.Header.Add("content-type", "application/json")
 
@@ -86,6 +93,7 @@ func (c CryptoCompareClient) TopListByPairVolume(ctx context.Context, limit int)
 	if resp.StatusCode != 200 {
 		return nil, errors.Errorf("TopListByPairVolume, request failed with status: %s", resp.Status)
 	}
+
 	var target TopListByPairVolumeResponse
 	defer resp.Body.Close()
 	if err := json.NewDecoder(resp.Body).Decode(&target); err != nil {

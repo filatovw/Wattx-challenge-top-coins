@@ -34,6 +34,10 @@ func (e StatusError) In(statuses ...int) bool {
 	return false
 }
 
+func (e StatusError) Status() int {
+	return e.status
+}
+
 func (e StatusError) With(err error) StatusError {
 	e.err = err
 	return e

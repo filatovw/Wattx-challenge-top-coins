@@ -2,6 +2,10 @@
 
 package remote
 
+/*
+	This test is not intened for use on CI. Just for manual checks.
+*/
+
 import (
 	"context"
 	"testing"
@@ -11,7 +15,7 @@ import (
 
 func TestTopListByPairVolume(t *testing.T) {
 	cfg := config.CryptoCompare{
-		Key:          "543e1ae0fd900fae7a8d8bf136be536dd1caaeb20b1b2dc9c6b2ee5f3843646f",
+		Key:          "<input your key here>"
 		URL:          "https://min-api.cryptocompare.com/data/top/volumes?tsym=BTC",
 		BaseCurrency: "BTC",
 	}

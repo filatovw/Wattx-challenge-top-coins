@@ -19,6 +19,7 @@ type client struct {
 	*grpc.ClientConn
 }
 
+// Connect to service
 func Connect(gcfg cfg.GRPCServiceConfig) (Client, error) {
 	conn, err := grpc.Dial(fmt.Sprintf("%s:9200", gcfg.ServiceName()), grpc.WithInsecure())
 	if err != nil {

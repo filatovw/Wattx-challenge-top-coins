@@ -2,6 +2,10 @@
 
 package remote
 
+/*
+	This test is not intened for use on CI. Just for manual checks.
+*/
+
 import (
 	"context"
 	"testing"
@@ -11,7 +15,7 @@ import (
 
 func TestGetMarketQuotes(t *testing.T) {
 	cfg := config.CoinMarketCap{
-		Key:          "6c07c9dc-0cc3-4810-8a3d-3c212f7493dd",
+		Key:          "<put your key here>"
 		URL:          "https://pro-api.coinmarketcap.com/v1/cryptocurrency",
 		BaseCurrency: "USD",
 	}
