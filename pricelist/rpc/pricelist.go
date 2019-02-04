@@ -21,6 +21,7 @@ func NewPricelistService(log *log.Logger, rank rank.Client, price price.Client) 
 	return PricelistService{log, price, rank}
 }
 
+// GetPricelist aggregate pricelist from remote API's
 func (s PricelistService) GetPricelist(ctx context.Context, req *pricelist.GetPricelistRequest) (*pricelist.GetPricelistResponse, error) {
 	resp := &pricelist.GetPricelistResponse{}
 	// Validate request
@@ -45,6 +46,7 @@ func (s PricelistService) GetPricelist(ctx context.Context, req *pricelist.GetPr
 
 	// Unique symbols
 	symbols := getUniqueSymbols(currencies)
+	// Find prices by symbols
 	resPrices, err := s.price.GetPrices(ctx, &price.GetPricesRequest{
 		Symbols: symbols,
 	})
@@ -56,11 +58,13 @@ func (s PricelistService) GetPricelist(ctx context.Context, req *pricelist.GetPr
 	if len(prices) == 0 {
 		return resp, nil
 	}
+	// build pricelist
 	resp.Positions = buildPricelist(prices, currencies)
 
 	return resp, nil
 }
 
+// buildPricelist assign price to each currency
 func buildPricelist(prices map[string]float64, currencies []*rank.Currency) []*pricelist.Position {
 	positions := []*pricelist.Position{}
 	var j int32 = 1
@@ -69,13 +73,14 @@ func buildPricelist(prices map[string]float64, currencies []*rank.Currency) []*p
 		positions = append(positions, &pricelist.Position{
 			Rank:     j,
 			Symbol:   cur.Symbol,
-			PriceUSD: price,
+			PriceUSD: price, // it is possible to have zero price here!!!
 		})
 		j++
 	}
 	return positions
 }
 
+// getUniqueSymbols drop duplicates for symbols
 func getUniqueSymbols(currs []*rank.Currency) []string {
 	set := map[string]struct{}{}
 	for _, v := range currs {

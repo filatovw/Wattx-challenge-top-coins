@@ -22,6 +22,13 @@ codegen:
 	protoc -I=. --go_out=plugins=grpc:. ./price/price/*.proto
 	protoc -I=. --go_out=plugins=grpc:. ./rank/rank/*.proto
 
+
+PHONY:infra
+infra:
+	docker-compose stop consul-cluster consul-agent registrator
+	docker-compose rm -f consul-cluster consul-agent registrator
+	docker-compose up -d consul-cluster consul-agent registrator
+
 PHONY:restart
 restart:
 	docker-compose stop api price rank pricelist
@@ -31,3 +38,7 @@ restart:
 PHONY:logs
 logs:
 	docker-compose logs -f api rank pricelist price
+
+PHONY:stop
+stop:
+	docker-compose stop

@@ -20,6 +20,7 @@ func NewPriceService(log *log.Logger, config config.Config, c remote.CoinMarketC
 	return PriceService{log: log, config: config, coinMarketCapClient: c}
 }
 
+// GetPrices fetch prices from api
 func (s PriceService) GetPrices(ctx context.Context, req *price.GetPricesRequest) (*price.GetPricesResponse, error) {
 	resp := &price.GetPricesResponse{}
 	if req == nil {

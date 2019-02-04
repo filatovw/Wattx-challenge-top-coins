@@ -19,17 +19,20 @@ func main() {
 	log := libs.GetStdLogger("API")
 
 	ctx := context.Background()
+	// read API service config
 	apiCfg := config.Config{}
 	if err := cfg.LoadConfig(&apiCfg); err != nil {
 		log.Fatalf("Main: %s", err)
 	}
 	log.Printf("Config: %v", apiCfg)
 
+	// read Pricelist service config
 	pricelistCfg := pricelistConfig.Config{}
 	if err := cfg.LoadConfig(&pricelistCfg); err != nil {
 		log.Fatalf("Main: %s", err)
 	}
 
+	// connect to Pricelist service
 	pricelistConn, err := pricelist.Connect(pricelistCfg)
 	if err != nil {
 		log.Fatalf("Main: %s", err)

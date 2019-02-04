@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// PricelistHandler create pricelist report in CSV or JSON format depending on "content-type" from headers
 func PricelistHandler(srv Service) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
@@ -15,7 +16,7 @@ func PricelistHandler(srv Service) http.Handler {
 		t := getCType(r)
 		headers := getHeaders(t)
 
-		limit, err := ToInt32(r.URL.Query().Get("limit"))
+		limit, err := toInt32(r.URL.Query().Get("limit"))
 		if err != nil {
 			WriteError(w, headers, ErrBadRequest.With(err))
 			return
@@ -37,20 +38,21 @@ func PricelistHandler(srv Service) http.Handler {
 	})
 }
 
+// toInt32 convert incoming string to int32
+func toInt32(val string) (int32, error) {
+	if val == "" {
+		return 0, errors.New("toInt32, empty")
+	}
+	v, err := strconv.ParseInt(val, 10, 32)
+	if err != nil {
+		return 0, errors.Wrapf(err, "toInt32, unable to parse")
+	}
+	return int32(v), nil
+}
+
+// HealthCheckHandlerFunc test endpoint
 func HealthCheckHandlerFunc(w http.ResponseWriter, r *http.Request) {
 	t := getCType(r)
 	headers := getHeaders(t)
 	WriteOK(w, headers, []byte("OK"))
-}
-
-// ToInt32 helper convert incoming string to int32
-func ToInt32(val string) (int32, error) {
-	if val == "" {
-		return 0, errors.New("ToInt32, empty")
-	}
-	v, err := strconv.ParseInt(val, 10, 32)
-	if err != nil {
-		return 0, errors.Wrapf(err, "ToInt32, unable to parse")
-	}
-	return int32(v), nil
 }

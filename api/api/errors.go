@@ -11,27 +11,15 @@ var (
 	ErrMethodNotAllowed    = StatusError{status: http.StatusMethodNotAllowed, message: "method not allowed"}
 )
 
+// StatusError
 type StatusError struct {
-	err     error
-	message string
-	status  int
+	err     error  // for internal logging
+	message string // show to user
+	status  int    // HTTP status code
 }
 
 func (e StatusError) Error() string {
 	return fmt.Sprintf("[%d] %s", e.status, e.message)
-}
-
-func (e StatusError) Is(status int) bool {
-	return e.status == status
-}
-
-func (e StatusError) In(statuses ...int) bool {
-	for _, status := range statuses {
-		if e.Is(status) {
-			return true
-		}
-	}
-	return false
 }
 
 func (e StatusError) Status() int {

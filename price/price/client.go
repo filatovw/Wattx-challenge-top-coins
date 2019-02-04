@@ -19,8 +19,9 @@ type client struct {
 	*grpc.ClientConn
 }
 
+// Connect to service
 func Connect(gcfg cfg.GRPCServiceConfig) (Client, error) {
-	// gcfg.FullServiceName() TODO: wtf is going on with registrator???
+	// TODO: use gcfg.FullServiceName() for Registartor
 	conn, err := grpc.Dial(fmt.Sprintf("%s:9200", gcfg.ServiceName()), grpc.WithInsecure())
 	if err != nil {
 		return nil, errors.Wrapf(err, "Connect")

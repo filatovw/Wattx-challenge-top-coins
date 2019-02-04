@@ -21,43 +21,61 @@ Full solution consists of several services:
     Client request -> 
         API -> 
             pricelist ->
-                if data still fresh -> return response
-                else:
                     request top_<limit> currencies  -> rank
-                    response top_<limit>            <- rank
+                    response top_<limit> currencies <- rank
                     request prices for currencies   -> price
                     prices for given currencies     <- price
                 aggregate responses
-                store into local database
             <- return pricelist data
         <- return compiled response
         
-Both `rank` and `price` services drain actual info from the external APIs regularely (similar to cron task).
-
-TODO:
-
-- [x] `rank` service functionality
-- [ ] `price` service functionality
-- [x] skeleton for the API HTTP server
-- [x] support CSV/JSON formats
-- [x] protofiles
-- [ ] protofiles compilator
-- [ ] gRPC servers & clients
-- [ ] `pricelist` aggregation
-- [ ] `pricelist` storage
-- [x] API service `/healthcheck` 
-- [ ] API service `/` with support of `limit` parameter
-- [ ] `price` storage
-- [ ] `rank` storage
-- [ ] `pricelist` storage
-- [ ] explanation for development process
-- [x] introduce service discovery
-- [x] introduce config management
-
 What I'd add if I have time:
 ----------------------------
 
-    - distributed cron service that should set tasks in a queue
-    - `rank` and `price` services refresh its data from APIs by message from the corresponding queue
-    - there should be admin panel for a safe operational control
+    - auto registrator service. It's already there, but I have some troubles with it.
+    - small fast database with support of TTL tailored to `pricelist` service for cache
+    - healthchecks across the infrastructure
 
+
+How to start:
+=============
+
+Make sure you have docker, docker-compose and make installed.
+
+Clone repository:
+
+    git clone https://github.com/filatovw/Wattx-challenge-top-coins.git
+    cd Wattx-challenge-top-coins 
+
+Download images:
+
+    make pull
+
+Start infrastructure:
+
+    make infra
+
+Rollout configs:
+
+    make configure
+
+Start services:
+
+    make restart
+
+Watch logs:
+    
+    make logs
+
+
+Get report in CSV:
+
+    curl -X GET "http://0.0.0.0:8667/?limit=100" -H "content-type:text/csv"
+
+Get report in JSON:
+
+    curl -X GET "http://0.0.0.0:8667/?limit=100" -H "content-type:application/json"
+
+or 
+
+    curl -X GET "http://0.0.0.0:8667/?limit=100"
