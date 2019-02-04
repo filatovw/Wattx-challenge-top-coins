@@ -37,7 +37,7 @@ type TopListByPairVolumeResponse struct {
 }
 
 type CryptoCompareClient struct {
-	client       *http.Client
+	client       http.Client
 	url          string
 	key          string
 	baseCurrency string
@@ -52,7 +52,7 @@ func NewCryptoCompareClient(cfg config.CryptoCompare) CryptoCompareClient {
 		url:          cfg.URL,
 		key:          cfg.Key,
 		baseCurrency: cfg.BaseCurrency,
-		client:       &http.Client{Transport: tr},
+		client:       http.Client{Transport: tr},
 	}
 }
 

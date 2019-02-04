@@ -37,19 +37,56 @@ func (s PricelistGRPCServer) GetPricelist(ctx context.Context, req *pricelist.Ge
 	if err != nil {
 		return resp, errors.Wrapf(err, "GerPricelist, GetRanks")
 	}
+	currencies := resRanks.GetCurrencies()
 	// Empty response is valid value
-	if len(resRanks.GetCurrencies()) == 0 {
+	if len(currencies) == 0 {
 		return resp, nil
 	}
 
-	positions := make([]*pricelist.Position, len(resRanks.GetCurrencies()))
-	s.log.Printf("%s", resRanks)
-	for i, c := range resRanks.GetCurrencies() {
-		positions[i] = &pricelist.Position{
-			Rank:   c.Rank,
-			Symbol: c.Symbol,
-		}
+	// Unique symbols
+	symbols := getUniqueSymbols(currencies)
+	resPrices, err := s.price.GetPrices(ctx, &price.GetPricesRequest{
+		Symbols: symbols,
+	})
+	if err != nil {
+		return resp, errors.Wrapf(err, "GetPricelist, GetPrices")
 	}
 
-	return &pricelist.GetPricelistResponse{Positions: positions}, nil
+	prices := resPrices.GetPrices()
+	if len(prices) == 0 {
+		return resp, nil
+	}
+	resp.Positions = buildPricelist(prices, currencies)
+
+	return resp, nil
+}
+
+func buildPricelist(prices map[string]float64, currencies []*rank.Currency) []*pricelist.Position {
+	positions := []*pricelist.Position{}
+	j := int32(1)
+	for _, cur := range currencies {
+		if price, ok := prices[cur.Symbol]; ok {
+			positions = append(positions, &pricelist.Position{
+				Rank:     j,
+				Symbol:   cur.Symbol,
+				PriceUSD: price,
+			})
+			j++
+		}
+	}
+	return positions
+}
+
+func getUniqueSymbols(currs []*rank.Currency) []string {
+	set := map[string]struct{}{}
+	for _, v := range currs {
+		set[v.Symbol] = struct{}{}
+	}
+	names := make([]string, len(set))
+	i := 0
+	for k, _ := range set {
+		names[i] = k
+		i++
+	}
+	return names
 }

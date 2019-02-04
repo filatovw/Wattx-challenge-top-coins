@@ -7,14 +7,9 @@ service PriceService {
 }
 
 message GetPricesRequest {
-    int32 limit = 1;
+    repeated string Symbols = 1;
 }
 
 message GetPricesResponse {
-    repeated Price Prices= 1;
-}
-
-message Price {
-    string Symbol = 1;
-    double Value = 2;
+    map<string, double> Prices = 1;
 }

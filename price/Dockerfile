@@ -6,6 +6,10 @@ RUN go build -o /usr/bin/app ./price
 
 
 FROM debian:stretch
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates tzdata curl && \
+    rm -rf /var/lib/apt/lists/*
+
 WORKDIR /usr/bin/
 COPY --from=builder /usr/bin/app .
 COPY ./api/docker-entrypoint.sh /docker-entrypoint.sh

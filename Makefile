@@ -30,4 +30,4 @@ restart:
 
 PHONY:logs
 logs:
-	docker-compose logs -f api rank pricelist rank
+	docker-compose logs -f api rank pricelist price
