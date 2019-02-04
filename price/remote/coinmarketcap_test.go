@@ -16,7 +16,7 @@ func TestGetMarketQuotes(t *testing.T) {
 		BaseCurrency: "USD",
 	}
 	client := NewCoinMarketCapClient(nil, cfg)
-	data, err := client.GetMarketQuotes(context.Background(), []string{"BTC", "ETH"})
+	data, err := client.GetMarketQuotes(context.Background(), []string{"BTC", "ETH", "HOT*", "ETF", "FIL12", "FIL36", "FIL6", "IOT", "OKB"})
 	if err != nil {
 		t.Errorf("Unexpected error: %s", err)
 	}

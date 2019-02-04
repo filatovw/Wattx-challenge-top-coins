@@ -63,16 +63,15 @@ func (s PricelistGRPCServer) GetPricelist(ctx context.Context, req *pricelist.Ge
 
 func buildPricelist(prices map[string]float64, currencies []*rank.Currency) []*pricelist.Position {
 	positions := []*pricelist.Position{}
-	j := int32(1)
+	var j int32 = 1
 	for _, cur := range currencies {
-		if price, ok := prices[cur.Symbol]; ok {
-			positions = append(positions, &pricelist.Position{
-				Rank:     j,
-				Symbol:   cur.Symbol,
-				PriceUSD: price,
-			})
-			j++
-		}
+		price := prices[cur.Symbol]
+		positions = append(positions, &pricelist.Position{
+			Rank:     j,
+			Symbol:   cur.Symbol,
+			PriceUSD: price,
+		})
+		j++
 	}
 	return positions
 }

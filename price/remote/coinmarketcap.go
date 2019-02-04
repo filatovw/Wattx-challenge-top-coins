@@ -15,6 +15,11 @@ import (
 	"github.com/pkg/errors"
 )
 
+var (
+	namePattern            = regexp.MustCompile(`[^\d\w\,]+`)
+	wrongCurrenciesPattern = regexp.MustCompile(`symbol.*"([\d\w\,]+)"$`)
+)
+
 type CoinMarketCap interface {
 	GetMarketQuotes(ctx context.Context, names []string) (map[string]float64, error)
 }
@@ -40,28 +45,10 @@ func NewCoinMarketCapClient(log *log.Logger, cfg config.CoinMarketCap) CoinMarke
 	}
 }
 
-func (c CoinMarketCapClient) GetMarketQuotes(ctx context.Context, names []string) (map[string]float64, error) {
-	if len(names) == 0 {
-		return nil, nil
-	}
-	symbol := strings.Join(names, `,`)
-	var re = regexp.MustCompile(`[^\d\w\,]+`)
-	symbol = re.ReplaceAllString(symbol, "")
-
-	u, err := url.Parse(c.url)
+func (c CoinMarketCapClient) get(ctx context.Context, url string) (*http.Response, error) {
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, errors.WithMessagef(err, "GetMarketQuotes, url.Parse: %s", c.url)
-	}
-	q := u.Query()
-	q.Add("convert", c.baseCurrency)
-	q.Add("symbol", symbol)
-
-	u.RawQuery = q.Encode()
-	u.Path = path.Join(u.Path, "/quotes/latest")
-
-	req, err := http.NewRequest("GET", u.String(), nil)
-	if err != nil {
-		return nil, errors.WithMessage(err, "GetMarketQuotes, NewRequest")
+		return nil, errors.WithMessage(err, "Get, NewRequest")
 	}
 	req.Header.Add("X-CMC_PRO_API_KEY", c.key)
 	req.Header.Add("content-type", "application/json")
@@ -69,21 +56,79 @@ func (c CoinMarketCapClient) GetMarketQuotes(ctx context.Context, names []string
 	if err != nil {
 		return nil, errors.WithMessage(err, "GetMarketQuotes, client.Do")
 	}
+	return resp, nil
+}
 
-	log.Printf("ORIGINAL: %s", req.URL.RawQuery)
-	var target MarketQuotesResponse
+func (c CoinMarketCapClient) getMarketQuotes(ctx context.Context, names []string) (*MarketQuotesResponse, error) {
+	if len(names) == 0 {
+		return nil, nil
+	}
+	u, err := url.Parse(c.url)
+	if err != nil {
+		return nil, errors.WithMessagef(err, "getMarketQuotes, url.Parse: %s", c.url)
+	}
+	q := u.Query()
+	q.Add("convert", c.baseCurrency)
+	q.Add("symbol", strings.Join(names, ","))
+	u.RawQuery = q.Encode()
+	u.Path = path.Join(u.Path, "/quotes/latest")
+	resp, err := c.get(ctx, u.String())
+	if err != nil {
+		return nil, errors.WithMessage(err, "getMarketQuotes, client.Do")
+	}
 	defer resp.Body.Close()
 
+	var target MarketQuotesResponse
 	if err := json.NewDecoder(resp.Body).Decode(&target); err != nil {
-		return nil, errors.WithMessage(err, "GetMarketQuotes, decode response")
+		return nil, errors.WithMessagef(err, "getMarketQuotes, decode response, status: %s, code: %d", resp.Status, resp.StatusCode)
 	}
 
-	if target.Status.ErrorCode != 0 || resp.StatusCode != 200 {
-		return nil, errors.Errorf("GetMarketQuotes, http code: %d, status: %+v, url: %s", resp.StatusCode, target.Status, resp.Request.URL.RawQuery)
+	return &target, nil
+}
+
+func (c CoinMarketCapClient) GetMarketQuotes(ctx context.Context, names []string) (map[string]float64, error) {
+	if len(names) == 0 {
+		return nil, nil
 	}
 
-	data := make(map[string]float64, len(target.Data))
-	for _, q := range target.Data {
+	for i, name := range names[:] {
+		names[i] = namePattern.ReplaceAllString(name, "")
+	}
+
+	res, err := c.getMarketQuotes(ctx, names)
+	if err != nil {
+		return nil, err
+	}
+	if res.Status.ErrorCode == 400 {
+		wrongCurrencies := wrongCurrenciesPattern.FindStringSubmatch(res.Status.ErrorMessage)
+		if len(wrongCurrencies) == 2 {
+			wrongs := strings.Split(wrongCurrencies[1], ",")
+			cleaned := []string{}
+			for _, name := range names {
+				isWrong := false
+				for _, wrong := range wrongs {
+					if name == wrong {
+						isWrong = true
+						break
+					}
+				}
+				if !isWrong {
+					cleaned = append(cleaned, name)
+				}
+			}
+			res, err = c.getMarketQuotes(ctx, cleaned)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	if res.Status.ErrorCode > 0 {
+		return nil, errors.Errorf("GetMarketQuotes, status: %#v", res.Status)
+	}
+
+	data := make(map[string]float64, len(res.Data))
+	for _, q := range res.Data {
 		if cur, ok := q.Quote[c.baseCurrency]; ok {
 			data[q.Symbol] = cur.Price
 		}
