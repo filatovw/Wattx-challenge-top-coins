@@ -5,16 +5,9 @@ RUN go install -v ./...
 RUN go build -o /usr/bin/app ./price
 
 
-FROM debian:stretch
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates tzdata curl && \
-    rm -rf /var/lib/apt/lists/*
-
+FROM filatovw/services-base:latest
 WORKDIR /usr/bin/
 COPY --from=builder /usr/bin/app .
 COPY ./api/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
-
-EXPOSE 8080
-EXPOSE 9200
