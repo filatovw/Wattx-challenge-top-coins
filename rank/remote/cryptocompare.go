@@ -16,7 +16,7 @@ import (
 
 // CryptoComparer
 type CryptoComparer interface {
-	TopTotalMktCapEndpointFull(ctx context.Context, tsym string, page, limit int) ([]Currency, error)
+	TopTotalMktCapEndpointFull(ctx context.Context, page, limit uint) ([]CoinData, error)
 }
 type CryptoCompareClient struct {
 	client       http.Client

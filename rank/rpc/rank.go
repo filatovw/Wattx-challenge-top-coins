@@ -13,11 +13,11 @@ import (
 
 type RankService struct {
 	log                  *log.Logger
-	cryptoComparerClient remote.CryptoCompareClient
+	cryptoComparerClient remote.CryptoComparer
 	config               config.Config
 }
 
-func NewRankService(log *log.Logger, c remote.CryptoCompareClient, config config.Config) RankService {
+func NewRankService(log *log.Logger, c remote.CryptoComparer, config config.Config) RankService {
 	return RankService{log: log, cryptoComparerClient: c, config: config}
 }
 
