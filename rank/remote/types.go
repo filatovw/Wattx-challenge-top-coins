@@ -18,3 +18,15 @@ type TopListByPairVolumeResponse struct {
 	HasWarning     bool       `json:"HasWarning"`
 	ParamWithError string     `json:"ParamWithError,omitempty"`
 }
+
+type ToplistByMarketCapFullDataResponse struct {
+	Data    []CoinData `json:"Data,omitempty"`
+	Message string     `json:"Message"`
+}
+
+type CoinData struct {
+	CoinInfo CoinInfo `json:"CoinInfo"`
+}
+type CoinInfo struct {
+	Name string `json:"Name"`
+}

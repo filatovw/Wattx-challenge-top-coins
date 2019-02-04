@@ -15,13 +15,13 @@ import (
 
 func TestTopListByPairVolume(t *testing.T) {
 	cfg := config.CryptoCompare{
-		Key:          "<input your key here>"
-		URL:          "https://min-api.cryptocompare.com/data/top/volumes?tsym=BTC",
-		BaseCurrency: "BTC",
+		Key:          "543e1ae0fd900fae7a8d8bf136be536dd1caaeb20b1b2dc9c6b2ee5f3843646f",
+		URL:          "https://min-api.cryptocompare.com/data/",
+		BaseCurrency: "USD",
 	}
 	client := NewCryptoCompareClient(cfg)
 	limit := 100
-	curs, err := client.TopListByPairVolume(context.TODO(), limit)
+	curs, err := client.TopListByPairVolume(context.TODO(), uint(0), uint(limit))
 	if err != nil {
 		t.Errorf("Unexpected error: %s", err)
 	}
