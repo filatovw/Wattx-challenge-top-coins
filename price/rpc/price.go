@@ -10,17 +10,17 @@ import (
 	"github.com/pkg/errors"
 )
 
-type PriceGRPCServer struct {
+type PriceService struct {
 	log                 *log.Logger
 	config              config.Config
 	coinMarketCapClient remote.CoinMarketCap
 }
 
-func NewPriceGRPCServer(log *log.Logger, config config.Config, c remote.CoinMarketCap) PriceGRPCServer {
-	return PriceGRPCServer{log: log, config: config, coinMarketCapClient: c}
+func NewPriceService(log *log.Logger, config config.Config, c remote.CoinMarketCap) PriceService {
+	return PriceService{log: log, config: config, coinMarketCapClient: c}
 }
 
-func (s PriceGRPCServer) GetPrices(ctx context.Context, req *price.GetPricesRequest) (*price.GetPricesResponse, error) {
+func (s PriceService) GetPrices(ctx context.Context, req *price.GetPricesRequest) (*price.GetPricesResponse, error) {
 	resp := &price.GetPricesResponse{}
 	if req == nil {
 		return resp, errors.New("GetPrices, empty request")

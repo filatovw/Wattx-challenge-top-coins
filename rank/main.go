@@ -32,7 +32,7 @@ func main() {
 	cclient := remote.NewCryptoCompareClient(rankCfg.CryptoCompare)
 	// init server
 	s := grpc.NewServer(rank.MaxSendMsgSize, rank.MaxRecvMsgSize)
-	server := rpc.NewRankGRPCServer(log, cclient, rankCfg)
+	server := rpc.NewRankService(log, cclient, rankCfg)
 	rank.RegisterRankServiceServer(s, server)
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {

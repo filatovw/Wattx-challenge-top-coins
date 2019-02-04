@@ -32,7 +32,7 @@ func main() {
 	cmcClient := remote.NewCoinMarketCapClient(log, pcfg.CoinMarketCap)
 	// init server
 	s := grpc.NewServer(price.MaxSendMsgSize, price.MaxRecvMsgSize)
-	server := rpc.NewPriceGRPCServer(log, pcfg, cmcClient)
+	server := rpc.NewPriceService(log, pcfg, cmcClient)
 	price.RegisterPriceServiceServer(s, server)
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {

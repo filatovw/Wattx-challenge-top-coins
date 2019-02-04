@@ -10,17 +10,17 @@ import (
 	"github.com/pkg/errors"
 )
 
-type RankGRPCServer struct {
+type RankService struct {
 	log                  *log.Logger
 	cryptoComparerClient remote.CryptoCompareClient
 	config               config.Config
 }
 
-func NewRankGRPCServer(log *log.Logger, c remote.CryptoCompareClient, config config.Config) RankGRPCServer {
-	return RankGRPCServer{log: log, cryptoComparerClient: c, config: config}
+func NewRankService(log *log.Logger, c remote.CryptoCompareClient, config config.Config) RankService {
+	return RankService{log: log, cryptoComparerClient: c, config: config}
 }
 
-func (s RankGRPCServer) GetRanks(ctx context.Context, req *rank.GetRanksRequest) (*rank.GetRanksResponse, error) {
+func (s RankService) GetRanks(ctx context.Context, req *rank.GetRanksRequest) (*rank.GetRanksResponse, error) {
 	resp := &rank.GetRanksResponse{}
 	if req == nil {
 		return resp, errors.Errorf("GetRanks")

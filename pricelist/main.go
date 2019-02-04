@@ -58,7 +58,7 @@ func main() {
 
 	// init server
 	s := grpc.NewServer(pricelist.MaxSendMsgSize, pricelist.MaxRecvMsgSize)
-	server := rpc.NewPricelistGRPCServer(
+	server := rpc.NewPricelistService(
 		log,
 		rankConn,
 		priceConn,
