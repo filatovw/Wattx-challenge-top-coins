@@ -1,22 +1,22 @@
 version: '3.6'
 services:
   api:
-    image: filatovw/services-api:latest
+    image: filatovw/services-api:master
     ports:
       - 8667:8080
 
   pricelist:
-    image: filatovw/services-pricelist:latest
+    image: filatovw/services-pricelist:master
     ports:
       - 0:9200
 
   price:
-    image: filatovw/services-price:latest
+    image: filatovw/services-price:master
     ports:
       - 0:9200
     
   rank:
-    image: filatovw/services-rank:latest
+    image: filatovw/services-rank:master
     ports:
       - 0:9200
     
