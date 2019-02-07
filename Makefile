@@ -1,3 +1,4 @@
+DOCKER_PROJECT_PATH=/go/src/github.com/filatovw/Wattx-challenge-top-coins/
 .PHONY:all
 SUBDIRS := api price rank pricelist 
 TOPTARGETS := build clear push pull test
@@ -22,6 +23,9 @@ codegen:
 	protoc -I=. --go_out=plugins=grpc:. ./price/price/*.proto
 	protoc -I=. --go_out=plugins=grpc:. ./rank/rank/*.proto
 
+PHONY:docker-codegen
+docker-codegen:
+	docker run -it --rm -v $(CURDIR):$(DOCKER_PROJECT_PATH) -w=$(DOCKER_PROJECT_PATH) filatovw/go-protobuf:latest bash -c 'go install ./... && make codegen'
 
 PHONY:infra
 infra:
